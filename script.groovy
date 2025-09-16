@@ -35,7 +35,7 @@ class MyBuild {
         log.info "Downloaded Gradle wrapper"
 
         // Check that the Gradle wrapper is installed where GME is expecting it
-        File wrapperHome = new File("$gradleHome/wrapper/dists/gradle-7.2-bin/2dnblmf4td7x66yl1d74lt32g/gradle-7.2")
+        File wrapperHome = new File("$gradleHome/wrapper/dists/gradle-8.14.3-bin/cv11ve7ro1n3o1j4so8xd9n66/gradle-8.14.3")
         if (!wrapperHome.exists()) {
             throw new RuntimeException("Gradle wrapper home not found at $wrapperHome.absolutePath")
         }
