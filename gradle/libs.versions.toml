@@ -4,7 +4,11 @@
 [versions]
 guava = "33.3.1-jre"
 junit = "4.13.2"
+pme = "4.22"
+gme = "3.24"
 
 [libraries]
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
 junit = { module = "junit:junit", version.ref = "junit" }
+pme = { module = "org.commonjava.maven.ext:pom-manipulation-core", version.ref = "pme" }
+gme = { module = "org.jboss.gm:common", version.ref = "gme" }
