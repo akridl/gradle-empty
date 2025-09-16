@@ -12,18 +12,12 @@ class MyBuild {
     BaseScript gme
 
     def run() {
-        // Update Gradle wrapper to be picked up by GME
-        File wrapperProps = new File(gme.getBaseDir(), "gradle/wrapper/gradle-wrapper.properties")
-        wrapperProps.text = wrapperProps.text.replaceFirst("gradle-5\\.6-bin\\.zip", "gradle-7\\.2-bin\\.zip")
-
-        log.info  "Updated $wrapperProps.name"
-
         // The Gradle wrapper isn't in the expected location for GME to find it.
         // It's too late to move it since Repour has already checked for it.
         // Manually download the updated Gradle wrapper and install it to the
         // path we specified with the '-l' GME option.
         String gradleHome = "/tmp/gradle"
-        File wrapperBin = new File(gme.getBaseDir(), "gradle/gradlew")
+        File wrapperBin = new File(gme.getBaseDir(), "gradlew")
         StringBuilder sbOut = new StringBuilder()
         StringBuilder sbErr = new StringBuilder()
         Process proc = "$wrapperBin.absolutePath -g $gradleHome --version".execute()
