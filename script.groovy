@@ -12,7 +12,40 @@ class MyBuild {
     BaseScript gme
 
     def run() {
-        log.info('Running custom script before GME is being run')
+        // Update Gradle wrapper to be picked up by GME
+        File wrapperProps = new File(gme.getBaseDir(), "gradle/wrapper/gradle-wrapper.properties")
+        wrapperProps.text = wrapperProps.text.replaceFirst("gradle-5\\.6-bin\\.zip", "gradle-7\\.2-bin\\.zip")
+
+        log.info  "Updated $wrapperProps.name"
+
+        // The Gradle wrapper isn't in the expected location for GME to find it.
+        // It's too late to move it since Repour has already checked for it.
+        // Manually download the updated Gradle wrapper and install it to the
+        // path we specified with the '-l' GME option.
+        String gradleHome = "/tmp/gradle"
+        File wrapperBin = new File(gme.getBaseDir(), "gradle/gradlew")
+        StringBuilder sbOut = new StringBuilder()
+        StringBuilder sbErr = new StringBuilder()
+        Process proc = "$wrapperBin.absolutePath -g $gradleHome --version".execute()
+        proc.consumeProcessOutput(sbOut, sbErr)
+        proc.waitForOrKill(600000)
+        if (sbOut.length() > 0) {
+            log.info "$sbOut"
+        }
+        if (sbErr.length() > 0) {
+            log.info "$sbErr"
+        }
+        if (proc.exitValue() != 0) {
+            throw new RuntimeException("Failed to download Gradle using wrapper")
+        }
+        log.info "Downloaded Gradle wrapper"
+
+        // Check that the Gradle wrapper is installed where GME is expecting it
+        File wrapperHome = new File("$gradleHome/wrapper/dists/gradle-7.2-bin/2dnblmf4td7x66yl1d74lt32g/gradle-7.2")
+        if (!wrapperHome.exists()) {
+            throw new RuntimeException("Gradle wrapper home not found at $wrapperHome.absolutePath")
+        }
+        log.info "Found Gradle wrapper home $wrapperHome.absolutePath"
     }
 }
 
